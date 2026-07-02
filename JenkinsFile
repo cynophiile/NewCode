@@ -1,74 +1,12 @@
 pipeline {
-    // Defines where the pipeline logic executes
     agent any 
 
-    // Global environment variables accessible in all stages
-    environment {
-        APP_NAME = "my-application"
-        DEPLOY_ENV = "staging"
-    }
-
-    // Pipeline execution options
-    options {
-        timeout(time: 1, unit: 'HOURS') // Fails build if it hangs
-        timestamps()                    // Adds timestamps to console log
-        disableConcurrentBuilds()       // Prevents concurrent execution
-    }
-
-    // User inputs prompted before or during execution
-    parameters {
-        string(name: 'BRANCH', defaultValue: 'main', description: 'Code branch to deploy')
-        booleanParam(name: 'RUN_TESTS', defaultValue: true, description: 'Check to execute tests')
-    }
-
-    // Continuous Integration / Continuous Deployment stages
     stages {
-        stage('Checkout') {
+        stage('Hello World Stage') {
             steps {
-                echo "Fetching code from branch: ${params.BRANCH}"
-                // checkout scm
-            }
-        }
-
-        stage('Build') {
-            steps {
-                echo "Building ${env.APP_NAME}..."
-                // For Linux/macOS agents:
-                sh 'echo "Running build commands here"'
-                // For Windows agents use 'bat' instead of 'sh'
-            }
-        }
-
-        stage('Test') {
-            // Evaluates whether this stage should run
-            when {
-                expression { return params.RUN_TESTS }
-            }
-            steps {
-                echo "Running test suite..."
-                sh 'echo "Running unit tests..."'
-            }
-        }
-
-        stage('Deploy') {
-            steps {
-                echo "Deploying to ${env.DEPLOY_ENV} environment..."
-                // Run deployment scripts or configuration tools here
+                echo 'Hello World'
             }
         }
     }
-
-    // Actions executed depending on the pipeline status
-    post {
-        always {
-            echo "Cleaning up workspace resources..."
-            cleanWs() 
-        }
-        success {
-            echo "Pipeline completed successfully!"
-        }
-        failure {
-            echo "Pipeline failed. Sending alert notifications..."
-        }
-    }
+}
 }
